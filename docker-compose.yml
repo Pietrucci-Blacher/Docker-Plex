@@ -1,6 +1,21 @@
 version: '3.8'
 
 services:
+  radarr-container:
+    image: ghcr.io/linuxserver/radarr:latest
+    container_name: radarr-container
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+    volumes:
+      - ./dist/radarr/config:/config
+      - ./dist/radarr/downloads:/downloads
+      - ./dist/radarr/movies/:/movies
+    ports:
+      - "7878:7878"
+    restart: unless-stopped
+
   plex-container:
     image: lscr.io/linuxserver/plex:latest
     environment:
@@ -10,9 +25,9 @@ services:
       - TZ=Europe/Paris
       - PLEX_CLAIM="${TOKEN_PLEX}"
     volumes:
-        - ./dist/library:/config
-        - ./dist/tvseries:/tv
-        - ./dist/movies:/movies
+        - ./dist/plex/library:/config
+        - ./dist/plex/tvseries:/tv
+        - ./dist/plex/movies:/movies
     restart: unless-stopped
     ports:
       - "32400:32400"
@@ -24,3 +39,5 @@ services:
       - "32412:32412/udp"
       - "32413:32413/udp"
       - "32414:32414/udp"
+    depends_on:
+      - radarr-container
