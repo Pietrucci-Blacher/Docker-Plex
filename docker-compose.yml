@@ -1,6 +1,19 @@
 version: '3.8'
 
 services:
+  sonarr-container:
+    image: lscr.io/linuxserver/sonarr:latest
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - ./dist/sonarr/data:/config
+      - ./dist/sonarr/tvseries:/tv
+      - ./dist/sonarr/downloadclient-downloads:/downloads
+    ports:
+      - 8989:8989
+    restart: unless-stopped
   plex-container:
     image: lscr.io/linuxserver/plex:latest
     environment:
@@ -10,9 +23,9 @@ services:
       - TZ=Europe/Paris
       - PLEX_CLAIM="${TOKEN_PLEX}"
     volumes:
-        - ./dist/library:/config
-        - ./dist/tvseries:/tv
-        - ./dist/movies:/movies
+      - ./dist/plex/library:/config
+      - ./dist/plex/tvseries:/tv
+      - ./dist/plex/movies:/movies
     restart: unless-stopped
     ports:
       - "32400:32400"
@@ -24,3 +37,5 @@ services:
       - "32412:32412/udp"
       - "32413:32413/udp"
       - "32414:32414/udp"
+    depends_on:
+      - sonarr-container
