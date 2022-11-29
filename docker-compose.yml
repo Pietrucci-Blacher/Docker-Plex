@@ -14,6 +14,21 @@ services:
     ports:
       - 8989:8989
     restart: unless-stopped
+  radarr-container:
+    image: ghcr.io/linuxserver/radarr:latest
+    container_name: radarr-container
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+    volumes:
+      - ./dist/radarr/config:/config
+      - ./dist/radarr/downloads:/downloads
+      - ./dist/radarr/movies/:/movies
+    ports:
+      - "7878:7878"
+    restart: unless-stopped
+
   plex-container:
     image: lscr.io/linuxserver/plex:latest
     environment:
@@ -39,3 +54,4 @@ services:
       - "32414:32414/udp"
     depends_on:
       - sonarr-container
+      - radarr-container
