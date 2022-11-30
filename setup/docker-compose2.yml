@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  overseer-container:
+    image: ghcr.io/sct/overseerr:latest
+    container_name: overseer-container
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+    volumes:
+      - ./dist/overseer/config:/config
+    ports:
+      - "5055:5055"
+    restart: unless-stopped
+    depends_on:
+      - sonarr-container
+      - radarr-container
+      - plex-container
+  deluge:
+    image: linuxserver/deluge
+    container_name: deluge
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+      - UMASK_SET=022 #optional
+    volumes:
+      - ./dist/deluge/config:/config
+      - ./dist/deluge/downloads:/downloads
+    ports:
+      - 8112:8112
+      - 58846:58846
+    restart: unless-stopped
+    depends_on:
+      - sonarr-container
+      - radarr-container
+      - plex-container

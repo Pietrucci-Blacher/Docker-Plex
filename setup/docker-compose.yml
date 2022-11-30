@@ -12,7 +12,7 @@ services:
       - ./dist/sonarr/tvseries:/tv
       - ./dist/sonarr/downloadclient-downloads:/downloads
     ports:
-      - 8989:8989
+      - "8989:8989"
     restart: unless-stopped
   radarr-container:
     image: ghcr.io/linuxserver/radarr:latest
@@ -55,3 +55,5 @@ services:
     depends_on:
       - sonarr-container
       - radarr-container
+  plex-meta-manager:
+    image: meisnate12/plex-meta-manager:latest
