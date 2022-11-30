@@ -8,23 +8,22 @@ services:
       - PGID=1000
       - TZ=Europe/London
     volumes:
-      - ./dist/sonarr/data:/config
-      - ./dist/sonarr/tvseries:/tv
-      - ./dist/sonarr/downloadclient-downloads:/downloads
+      - ../dist/sonarr/data:/config
+      - ../dist/sonarr/tvseries:/tv
+      - ../dist/sonarr/downloadclient-downloads:/downloads
     ports:
       - "8989:8989"
     restart: unless-stopped
   radarr-container:
     image: ghcr.io/linuxserver/radarr:latest
-    container_name: radarr-container
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Paris
     volumes:
-      - ./dist/radarr/config:/config
-      - ./dist/radarr/downloads:/downloads
-      - ./dist/radarr/movies/:/movies
+      - ../dist/radarr/config:/config
+      - ../dist/radarr/downloads:/downloads
+      - ../dist/radarr/movies/:/movies
     ports:
       - "7878:7878"
     restart: unless-stopped
@@ -38,9 +37,9 @@ services:
       - TZ=Europe/Paris
       - PLEX_CLAIM="${TOKEN_PLEX}"
     volumes:
-      - ./dist/plex/library:/config
-      - ./dist/plex/tvseries:/tv
-      - ./dist/plex/movies:/movies
+      - ../dist/plex/library:/config
+      - ../dist/plex/tvseries:/tv
+      - ../dist/plex/movies:/movies
     restart: unless-stopped
     ports:
       - "32400:32400"
@@ -55,5 +54,3 @@ services:
     depends_on:
       - sonarr-container
       - radarr-container
-  plex-meta-manager:
-    image: meisnate12/plex-meta-manager:latest

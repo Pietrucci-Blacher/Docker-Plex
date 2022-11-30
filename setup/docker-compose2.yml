@@ -9,7 +9,7 @@ services:
       - PGID=1000
       - TZ=Europe/Paris
     volumes:
-      - ./dist/overseer/config:/config
+      - ../dist/overseer/config:/config
     ports:
       - "5055:5055"
     restart: unless-stopped
@@ -26,11 +26,11 @@ services:
       - TZ=Europe/Paris
       - UMASK_SET=022 #optional
     volumes:
-      - ./dist/deluge/config:/config
-      - ./dist/deluge/downloads:/downloads
+      - ../dist/deluge/config:/config
+      - ../dist/deluge/downloads:/downloads
     ports:
-      - 8112:8112
-      - 58846:58846
+      - "8112:8112"
+      - "58846:58846"
     restart: unless-stopped
     depends_on:
       - sonarr-container
