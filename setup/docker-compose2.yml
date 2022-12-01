@@ -36,3 +36,19 @@ services:
       - sonarr-container
       - radarr-container
       - plex-container
+  prowlarr-container:
+    image: lscr.io/linuxserver/prowlarr:develop
+    container_name: prowlarr-container
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - ../dist/prowlarr:/config
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+    depends_on:
+      - sonarr-container
+      - radarr-container
+      - plex-container
