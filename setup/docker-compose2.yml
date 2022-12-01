@@ -17,7 +17,8 @@ services:
       - sonarr-container
       - radarr-container
       - plex-container
-      -
+      - swagg-container
+
   deluge-openvpn-container:
     image: ebrianne/docker-deluge-openvpn:latest
     environment:
@@ -40,6 +41,27 @@ services:
       - sonarr-container
       - radarr-container
       - plex-container
+      - swagg-container
+
+  swagg-container:
+    image: linuxserver/swag:latest
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+      - URL=yourdomain.url
+      - SUBDOMAINS=www,
+      - VALIDATION=http
+      - DUCKDNSTOKEN=<token>
+    volumes:
+      - ../dist/swagg/config/:/config
+    ports:
+      - "443:443"
+      - "80:80"
+    restart: unless-stopped
+
   prowlarr-container:
     image: lscr.io/linuxserver/prowlarr:develop
     container_name: prowlarr-container
@@ -56,3 +78,4 @@ services:
       - sonarr-container
       - radarr-container
       - plex-container
+      - swagg-container
