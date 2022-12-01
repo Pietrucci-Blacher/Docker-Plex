@@ -17,20 +17,24 @@ services:
       - sonarr-container
       - radarr-container
       - plex-container
-  deluge:
-    image: linuxserver/deluge
-    container_name: deluge
+      -
+  deluge-openvpn-container:
+    image: ebrianne/docker-deluge-openvpn:latest
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Paris
-      - UMASK_SET=022 #optional
+        - OPENVPN_PROVIDER=PIA
+        - OPENVPN_CONFIG=France
+        - OPENVPN_USERNAME=user
+        - OPENVPN_PASSWORD=pass
+        - LOCAL_NETWORK=192.168.0.0/16
+    cap_add:
+        - NET_ADMIN
+    sysctls:
+        - net.ipv6.conf.all.disable_ipv6=1
+    ports:
+      - '8112:8112'
     volumes:
       - ../dist/deluge/config:/config
       - ../dist/deluge/downloads:/downloads
-    ports:
-      - "8112:8112"
-      - "58846:58846"
     restart: unless-stopped
     depends_on:
       - sonarr-container
