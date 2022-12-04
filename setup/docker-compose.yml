@@ -40,7 +40,7 @@ services:
       - PGID=1000
       - VERSION=docker
       - TZ=Europe/Paris
-      - PLEX_CLAIM="${TOKEN_PLEX}"
+      - PLEX_CLAIM="${TOKEN_PLEX:? The docker compose file need a generated a Plex token to work properly}"
     volumes:
       - ../dist/plex/library:/config
       - ../dist/plex/tvseries:/tv
@@ -58,8 +58,4 @@ services:
       - "32414:32414/udp"
     depends_on:
       - sonarr-container
-      - radarr-container
-      - swagg-container
 
-  plex-meta-manager:
-    image: ghcr.io/plexinc/pmm-plex-meta-manager:latest
