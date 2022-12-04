@@ -58,8 +58,4 @@ services:
       - "32414:32414/udp"
     depends_on:
       - sonarr-container
-      - radarr-container
-      - swagg-container
 
-  plex-meta-manager:
-    image: ghcr.io/plexinc/pmm-plex-meta-manager:latest

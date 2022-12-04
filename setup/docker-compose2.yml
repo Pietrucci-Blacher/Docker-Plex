@@ -3,6 +3,7 @@ version: '3.8'
 services:
   overseer-container:
     image: ghcr.io/sct/overseerr:latest
+    hostname: overserr.duckdns.org
     container_name: overseer-container
     environment:
       - PUID=1000
@@ -51,15 +52,23 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Paris
-      - URL=yourdomain.url
-      - SUBDOMAINS=www,
-      - VALIDATION=http
-      - DUCKDNSTOKEN=<token>
+      - SUBDOMAINS=wildcard
+      - VALIDATION=duckdns
+      - DUCKDNSTOKEN=${TOKEN_DUCKDNS}
     volumes:
       - ../dist/swagg/config/:/config
     ports:
       - "443:443"
       - "80:80"
+    restart: unless-stopped
+
+  authelia-swagg:
+    image: ghcr.io/authelia/authelia:latest
+    user: "1000:1000"
+    environment:
+      - TZ=Europe/Paris
+    volumes:
+      - ../dist/authelia/config/:/config
     restart: unless-stopped
 
   prowlarr-container:
