@@ -54,7 +54,7 @@ services:
       - TZ=Europe/Paris
       - SUBDOMAINS=wildcard
       - VALIDATION=duckdns
-      - DUCKDNSTOKEN=${TOKEN_DUCKDNS}
+      - DUCKDNSTOKEN=${TOKEN_DUCKDNS:? The docker compose file need a generated a DuckDNS token to work properly}
     volumes:
       - ../dist/swagg/config/:/config
     ports:
