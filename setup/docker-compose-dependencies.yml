@@ -81,7 +81,7 @@ services:
     volumes:
       - ../dist/prowlarr:/config
     ports:
-      - 9696:9696
+      - "9696:9696"
     restart: unless-stopped
     depends_on:
       - sonarr-container
