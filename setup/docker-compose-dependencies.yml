@@ -102,6 +102,27 @@ services:
     networks:
       - network-project
 
+  bazarr-container:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - ../dist/bazarr/config:/config
+      - ../dist/bazarr/movies:/movies
+      - ../dist/bazarr/tv:/tv
+    ports:
+      - 6767:6767
+    depends_on:
+      - radarr-container
+      - sonarr-container
+      - swagg-container
+    restart: unless-stopped
+    networks:
+      - network-project
+
 networks:
   network-project:
     external: true
