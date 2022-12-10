@@ -56,6 +56,7 @@ services:
       - SUBDOMAINS=wildcard
       - VALIDATION=duckdns
       - DUCKDNSTOKEN=${TOKEN_DUCKDNS:? The docker compose file need a generated a DuckDNS token to work properly}
+      - EMAIL=${EMAIL:? The docker compose file need a generated a email to work properly}
     volumes:
       - ../dist/swagg/config/:/config
     ports:
