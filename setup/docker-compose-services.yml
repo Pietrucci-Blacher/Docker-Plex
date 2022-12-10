@@ -15,7 +15,9 @@ services:
       - "8989:8989"
     restart: unless-stopped
     depends_on:
+      - overseer-container
       - swagg-container
+      - prowlarr-container
     networks:
       - network-project
 
@@ -33,7 +35,9 @@ services:
       - "7878:7878"
     restart: unless-stopped
     depends_on:
+      - overseer-container
       - swagg-container
+      - prowlarr-container
     networks:
       - network-project
 
@@ -61,10 +65,11 @@ services:
       - "32413:32413/udp"
       - "32414:32414/udp"
     depends_on:
-      - sonarr-container
+      - swagg-container
+      - deluge-openvpn-container
     networks:
       - network-project
 
 networks:
-  network-project:
+  "network-project":
     external: true

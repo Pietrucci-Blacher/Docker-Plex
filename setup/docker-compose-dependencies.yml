@@ -15,9 +15,6 @@ services:
       - "5055:5055"
     restart: unless-stopped
     depends_on:
-      - sonarr-container
-      - radarr-container
-      - plex-container
       - swagg-container
     networks:
       - network-project
@@ -42,10 +39,8 @@ services:
       - ../dist/deluge/downloads:/downloads
     restart: unless-stopped
     depends_on:
-      - sonarr-container
-      - radarr-container
-      - plex-container
       - swagg-container
+      - bazarr-container
     networks:
       - network-project
 
@@ -95,9 +90,6 @@ services:
       - "9696:9696"
     restart: unless-stopped
     depends_on:
-      - sonarr-container
-      - radarr-container
-      - plex-container
       - swagg-container
     networks:
       - network-project
@@ -114,7 +106,7 @@ services:
       - ../dist/bazarr/movies:/movies
       - ../dist/bazarr/tv:/tv
     ports:
-      - 6767:6767
+      - "6767:6767"
     depends_on:
       - radarr-container
       - sonarr-container
