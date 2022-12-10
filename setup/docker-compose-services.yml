@@ -44,7 +44,7 @@ services:
       - PGID=1000
       - VERSION=docker
       - TZ=Europe/Paris
-      - PLEX_CLAIM="${TOKEN_PLEX:? The docker compose file need a generated a Plex token to work properly}"
+      - PLEX_CLAIM="${PLEX_CLAIM:? The docker compose file need a generated a Plex token to work properly}"
     volumes:
       - ../dist/plex/library:/config
       - ../dist/plex/tvseries:/tv

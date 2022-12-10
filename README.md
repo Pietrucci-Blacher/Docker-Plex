@@ -5,7 +5,7 @@ This is a project for Plex Media Server to be able to download and watch movies 
 ## Requirements :
 
 ---
-### Create a setup.envfile with the following variables:
+### Create a setup.env file with the following variables:
  - PLEX_CLAIM=claim-XXXXXXXXXXXXXXXX
  - TOKEN_DUCKDNS=XXXXXXXXXXXXXXXX
 
