@@ -15,7 +15,11 @@ services:
       - "8989:8989"
     restart: unless-stopped
     depends_on:
+      - overseer-container
       - swagg-container
+      - prowlarr-container
+    networks:
+      - network-project
 
   radarr-container:
     image: ghcr.io/linuxserver/radarr:latest
@@ -31,7 +35,11 @@ services:
       - "7878:7878"
     restart: unless-stopped
     depends_on:
+      - overseer-container
       - swagg-container
+      - prowlarr-container
+    networks:
+      - network-project
 
   plex-container:
     image: lscr.io/linuxserver/plex:latest
@@ -40,7 +48,7 @@ services:
       - PGID=1000
       - VERSION=docker
       - TZ=Europe/Paris
-      - PLEX_CLAIM="${TOKEN_PLEX:? The docker compose file need a generated a Plex token to work properly}"
+      - PLEX_CLAIM="${PLEX_CLAIM:? The docker compose file need a generated a Plex token to work properly}"
     volumes:
       - ../dist/plex/library:/config
       - ../dist/plex/tvseries:/tv
@@ -57,5 +65,11 @@ services:
       - "32413:32413/udp"
       - "32414:32414/udp"
     depends_on:
-      - sonarr-container
+      - swagg-container
+      - deluge-openvpn-container
+    networks:
+      - network-project
 
+networks:
+  "network-project":
+    external: true

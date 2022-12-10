@@ -15,16 +15,16 @@ services:
       - "5055:5055"
     restart: unless-stopped
     depends_on:
-      - sonarr-container
-      - radarr-container
-      - plex-container
       - swagg-container
+    networks:
+      - network-project
+
 
   deluge-openvpn-container:
     image: ebrianne/docker-deluge-openvpn:latest
     environment:
         - OPENVPN_PROVIDER=PIA
-        - OPENVPN_CONFIG=France
+        - OPENVPN_CONFIG=france
         - OPENVPN_USERNAME=user
         - OPENVPN_PASSWORD=pass
         - LOCAL_NETWORK=192.168.0.0/16
@@ -39,10 +39,11 @@ services:
       - ../dist/deluge/downloads:/downloads
     restart: unless-stopped
     depends_on:
-      - sonarr-container
-      - radarr-container
-      - plex-container
       - swagg-container
+      - bazarr-container
+    networks:
+      - network-project
+
 
   swagg-container:
     image: linuxserver/swag:latest
@@ -59,8 +60,10 @@ services:
       - ../dist/swagg/config/:/config
     ports:
       - "443:443"
-      - "80:80"
     restart: unless-stopped
+    networks:
+      - network-project
+
 
   authelia-swagg:
     image: ghcr.io/authelia/authelia:latest
@@ -70,6 +73,9 @@ services:
     volumes:
       - ../dist/authelia/config/:/config
     restart: unless-stopped
+    networks:
+      - network-project
+
 
   prowlarr-container:
     image: lscr.io/linuxserver/prowlarr:develop
@@ -81,10 +87,34 @@ services:
     volumes:
       - ../dist/prowlarr:/config
     ports:
-      - 9696:9696
+      - "9696:9696"
     restart: unless-stopped
     depends_on:
-      - sonarr-container
-      - radarr-container
-      - plex-container
       - swagg-container
+    networks:
+      - network-project
+
+  bazarr-container:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - ../dist/bazarr/config:/config
+      - ../dist/bazarr/movies:/movies
+      - ../dist/bazarr/tv:/tv
+    ports:
+      - "6767:6767"
+    depends_on:
+      - radarr-container
+      - sonarr-container
+      - swagg-container
+    restart: unless-stopped
+    networks:
+      - network-project
+
+networks:
+  network-project:
+    external: true
