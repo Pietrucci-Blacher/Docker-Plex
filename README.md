@@ -8,10 +8,12 @@ This is a project for Plex Media Server to be able to download and watch movies 
 ### Create a setup.env file at the root of your folder with the following variables:
  - PLEX_CLAIM=claim-XXXXXXXXXXXXXXXX
  - TOKEN_DUCKDNS=XXXXXXXXXXXXXXXX
+ - DOMAIN_NAME=XXXXXXXXXXXXXXXX
  - EMAIL=test@test.com
 
 #### You can get the PLEX_CLAIM from the following link : https://www.plex.tv/claim/
-#### You can also get the TOKEN_DUCKDNS from the following link : https://www.duckdns.org/
+#### You can get the TOKEN_DUCKDNS AND DOMAIN_NAME from the following link : https://www.duckdns.org/
+
 
 ----
 

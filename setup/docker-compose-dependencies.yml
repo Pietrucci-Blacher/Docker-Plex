@@ -53,6 +53,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Paris
+      - URL=${DOMAIN_NAME:? The swagg container need a duckdns domain name to work properly}.duckdns.org
       - SUBDOMAINS=wildcard
       - VALIDATION=duckdns
       - DUCKDNSTOKEN=${TOKEN_DUCKDNS:? The docker compose file need a generated a DuckDNS token to work properly}
