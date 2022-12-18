@@ -4,5 +4,13 @@
 #Dist folder
 dist/*
 
+!setup/nginx/proxy-confs/bazarr.subdomain.conf
+!setup/nginx/proxy-confs/deluge-openvpn.subdomain.conf
+!setup/nginx/proxy-confs/overseerr.subdomain.conf
+!setup/nginx/proxy-confs/plex.subdomain.conf
+!setup/nginx/proxy-confs/prowlarr.subdomain.conf
+!setup/nginx/proxy-confs/radarr.subdomain.conf
+!setup/nginx/proxy-confs/sonarr.subdomain.conf
+
 #Env
 *.env
