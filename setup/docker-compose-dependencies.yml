@@ -3,8 +3,7 @@ version: '3.8'
 services:
   overseer-container:
     image: ghcr.io/sct/overseerr:latest
-    hostname: overserr.duckdns.org
-    container_name: overseer-container
+    container_name: overseerr
     environment:
       - PUID=1000
       - PGID=1000
@@ -22,6 +21,7 @@ services:
 
   deluge-openvpn-container:
     image: ebrianne/docker-deluge-openvpn:latest
+    container_name: deluge-openvpn
     environment:
         - OPENVPN_PROVIDER=PIA
         - OPENVPN_CONFIG=france
@@ -60,6 +60,7 @@ services:
       - EMAIL=${EMAIL:? The docker compose file need a generated a email to work properly and to be able to send you a notification if something goes wrong}
     volumes:
       - ../dist/swagg/config/:/config
+      - ./nginx/.:/config/nginx/
     ports:
       - "443:443"
     restart: unless-stopped
@@ -81,7 +82,7 @@ services:
 
   prowlarr-container:
     image: lscr.io/linuxserver/prowlarr:develop
-    container_name: prowlarr-container
+    container_name: prowlarr
     environment:
       - PUID=1000
       - PGID=1000
