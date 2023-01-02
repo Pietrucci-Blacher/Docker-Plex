@@ -5,119 +5,151 @@ services:
     image: ghcr.io/sct/overseerr:latest
     container_name: overseerr
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Paris
+      - PUID=${PUID:? The docker compose file need a generated a PUID to work properly}
+      - PGID=${PGID:? The docker compose file need a generated a PGID to work properly}
+      - TZ=${TIMEZONE:-Europe/Paris}
     volumes:
-      - ../dist/overseer/config:/config
+      - ../dist/overseer/config:/app/config
     ports:
       - "5055:5055"
     restart: unless-stopped
-    depends_on:
-      - swagg-container
     networks:
       - network-project
+    depends_on:
+      - plex-container
 
 
   deluge-openvpn-container:
     image: ebrianne/docker-deluge-openvpn:latest
-    container_name: deluge-openvpn
+    container_name: deluge
     environment:
-        - OPENVPN_PROVIDER=PIA
-        - OPENVPN_CONFIG=france
-        - OPENVPN_USERNAME=user
-        - OPENVPN_PASSWORD=pass
-        - LOCAL_NETWORK=192.168.0.0/16
+      - PUID=${PUID:? The docker compose file need a generated a PUID to work properly}
+      - PGID=${PGID:? The docker compose file need a generated a PGID to work properly}
+      - TZ=${TIMEZONE:-Europe/Paris}
+      - OPENVPN_PROVIDER=${OPENVPN_PROVIDER:? The docker compose file need a OPENVPN_PROVIDER to work properly}
+      - OPENVPN_CONFIG=${OPENVPN_CONFIG:? The docker compose file need a OPENVPN_CONFIG to work properly}
+      - OPENVPN_USERNAME=${OPENVPN_USERNAME:? The docker compose file need a OPENVPN_USERNAME to work properly}
+      - OPENVPN_PASSWORD=${OPENVPN_PASSWORD:? The docker compose file need a OPENVPN_PASSWORD to work properly}
+      - LOCAL_NETWORK=192.168.0.0/16
     cap_add:
-        - NET_ADMIN
+      - NET_ADMIN
     sysctls:
-        - net.ipv6.conf.all.disable_ipv6=1
+      - net.ipv6.conf.all.disable_ipv6=1
+    networks:
+        - network-project
     ports:
       - '8112:8112'
+      - '6881:6881'
+      - '6881:6881/udp'
     volumes:
-      - ../dist/deluge/config:/config
-      - ../dist/deluge/downloads:/downloads
+      - ../dist/deluge/config/:/config
+      - ../dist/medias/downloads:/downloads
     restart: unless-stopped
-    depends_on:
-      - swagg-container
-      - bazarr-container
-    networks:
-      - network-project
 
-
-  swagg-container:
+  swag-container:
     image: linuxserver/swag:latest
+    container_name: swag
     cap_add:
       - NET_ADMIN
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Paris
-      - URL=${DOMAIN_NAME:? The swagg container need a duckdns domain name to work properly}.duckdns.org
+      - PUID=${PUID:? The docker compose file need a generated a PUID to work properly}
+      - PGID=${PGID:? The docker compose file need a generated a PGID to work properly}
+      - TZ=${TIMEZONE:-Europe/Paris}
+      - URL=${DOMAIN_NAME:? The swag container need a duckdns domain name to work properly}.duckdns.org
       - SUBDOMAINS=wildcard
       - VALIDATION=duckdns
       - DUCKDNSTOKEN=${TOKEN_DUCKDNS:? The docker compose file need a generated a DuckDNS token to work properly}
       - EMAIL=${EMAIL:? The docker compose file need a generated a email to work properly and to be able to send you a notification if something goes wrong}
+      - DOCKER_MODS=linuxserver/mods:swag-dashboard
     volumes:
-      - ../dist/swagg/config/:/config
+      - ../dist/swag/config/:/config
       - ./nginx/.:/config/nginx/
+    #entrypoint: cp -r ./nginx/ ../dist/swag/config/nginx/
     ports:
       - "443:443"
     restart: unless-stopped
     networks:
       - network-project
 
-
-  authelia-swagg:
+  authelia-swag:
     image: ghcr.io/authelia/authelia:latest
+    container_name: authelia
     user: "1000:1000"
     environment:
-      - TZ=Europe/Paris
+      - TZ=${TIMEZONE:-Europe/Paris}
     volumes:
       - ../dist/authelia/config/:/config
+      - ./authelia/configuration.yml:/config/configuration.yml
     restart: unless-stopped
+    depends_on:
+      - mysql-container
     networks:
-      - network-project
-
+        - network-project
 
   prowlarr-container:
     image: lscr.io/linuxserver/prowlarr:develop
     container_name: prowlarr
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
+      - PUID=${PUID:? The docker compose file need a generated a PUID to work properly}
+      - PGID=${PGID:? The docker compose file need a generated a PGID to work properly}
+      - TZ=${TIMEZONE:-Europe/Paris}
+    networks:
+        - network-project
     volumes:
       - ../dist/prowlarr:/config
     ports:
       - "9696:9696"
     restart: unless-stopped
-    depends_on:
-      - swagg-container
-    networks:
-      - network-project
 
   bazarr-container:
     image: lscr.io/linuxserver/bazarr:latest
     container_name: bazarr
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
+      - PUID=${PUID:? The docker compose file need a generated a PUID to work properly}
+      - PGID=${PGID:? The docker compose file need a generated a PGID to work properly}
+      - TZ=${TIMEZONE:-Europe/Paris}
     volumes:
       - ../dist/bazarr/config:/config
-      - ../dist/bazarr/movies:/movies
-      - ../dist/bazarr/tv:/tv
+      - ../dist/medias/movies:/movies
+      - ../dist/medias/tvseries:/tv
     ports:
       - "6767:6767"
+    networks:
+        - network-project
     depends_on:
       - radarr-container
       - sonarr-container
-      - swagg-container
     restart: unless-stopped
-    networks:
-      - network-project
+
+  mysql-container:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:? The docker compose file need a generated a mysql root password to work properly}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:? The docker compose file need a generated a mysql database name to work properly}
+      - MYSQL_USER=${MYSQL_USER:? The docker compose file need a generated a mysql user to work properly}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:? The docker compose file need a generated a mysql password to work properly}
+    volumes:
+      - ../dist/mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      - PMA_HOST=mysql
+      - PMA_PORT=3306
+      - PMA_USER=${MYSQL_USER:? The docker compose file need a generated a mysql user to work properly}
+      - PMA_PASSWORD=${MYSQL_PASSWORD:? The docker compose file need a generated a mysql password to work properly}
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    depends_on:
+      - mysql-container
+
 
 networks:
   network-project:
-    external: true
+    name: network-project
