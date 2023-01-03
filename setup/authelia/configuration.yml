@@ -877,7 +877,7 @@ storage:
     ## the CLI to change this in the database if you want to change it from a previously configured value.
     encryption_key: cpK0yrOLgECItIFptFoYojJvT3rjOiVnC9ry+cNM6kyWw4WL7KVgvKArMZpv3oJc/F86GaRNLRS4MTWer0+Rdw==
     mysql:
-      host: host.docker.internal
+      host: mysql-container
       port: 3306
       database: dockerplex
       username: wordpress

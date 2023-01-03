@@ -52,8 +52,8 @@ services:
       - PLEX_CLAIM=${PLEX_CLAIM:? The docker compose file need a generated a Plex token to work properly}
     volumes:
       - ../dist/plex/library:/config
-      - ../dist/plex/tvseries:/tv
-      - ../dist/plex/movies:/movies
+      - ../dist/medias/tvseries:/tv
+      - ../dist/medias/movies/:/movies
     restart: unless-stopped
     ports:
       - "32400:32400"
