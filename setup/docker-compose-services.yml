@@ -5,11 +5,11 @@ services:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
     environment:
-      - PUID=0
-      - PGID=0
+      - PUID=${PUID:? The docker compose file need a generated a PUID to work properly}
+      - PGID=${PGID:? The docker compose file need a generated a PGID to work properly}
       - TZ=${TIMEZONE:-Europe/Paris}
     volumes:
-      - ../dist/sonarr/data:/config/sonarr
+      - ../dist/sonarr/data/:/config
       - ../dist/medias/tvseries:/tv
       - ../dist/medias/downloads:/downloads
     ports:
@@ -25,11 +25,11 @@ services:
     image: ghcr.io/linuxserver/radarr:latest
     container_name: radarr
     environment:
-      - PUID=0
-      - PGID=0
+      - PUID=${PUID:? The docker compose file need a generated a PUID to work properly}
+      - PGID=${PGID:? The docker compose file need a generated a PGID to work properly}
       - TZ=${TIMEZONE:-Europe/Paris}
     volumes:
-      - ../dist/radarr/config:/config/radarr
+      - ../dist/radarr/config:/config
       - ../dist/medias/downloads:/downloads
       - ../dist/medias/movies/:/movies
     ports:
@@ -52,8 +52,8 @@ services:
       - PLEX_CLAIM=${PLEX_CLAIM:? The docker compose file need a generated a Plex token to work properly}
     volumes:
       - ../dist/plex/library:/config
-      - ../dist/plex/tvseries:/tv
-      - ../dist/plex/movies:/movies
+      - ../dist/medias/tvseries:/tv
+      - ../dist/medias/movies/:/movies
     restart: unless-stopped
     ports:
       - "32400:32400"

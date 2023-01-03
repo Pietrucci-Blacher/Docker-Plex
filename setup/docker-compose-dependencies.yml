@@ -43,7 +43,7 @@ services:
       - '6881:6881/udp'
     volumes:
       - ../dist/deluge/config/:/config
-      - ../dist/medias/downloads:/downloads
+      - ../dist/medias/downloads:/download
     restart: unless-stopped
 
   swag-container:
